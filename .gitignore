@@ -4,6 +4,10 @@
 emails/*.txt
 data/*.csv
 
+#intelliJ#
+.idea
+
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
