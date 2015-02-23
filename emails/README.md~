@@ -1,0 +1,1 @@
+There won't be anything in this folder for privacy reasons. This is where your "sponsors.csv" file should be 
