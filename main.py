@@ -1,5 +1,9 @@
+#! /usr/bin/python
 __author__ = 'riccardo mutschlechner'
 
+import smtplib, getpass
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import csv
 
 class Sponsor:
@@ -13,8 +17,46 @@ class Sponsor:
         print self.name, " ", self.contactName, " ", self.email, " ", self.tier
 
 
+def sendEmail(sponsor, content):
+    print "Sending email to: ", sponsor.name
+    # me == my email address
+    # you == recipient's email address
+    me = "team@madhacks.org"
+    you = sponsor.email
+
+    # Create message container - the correct MIME type is multipart/alternative.
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "University of Wisconsin - MadHacks Offer of Sponsorship"
+    msg['From'] = me
+    msg['To'] = you
+
+    # Create the body of the message
+    text = content
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(text, 'plain')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+
+    user = "team@madhacks.org"
+    print "Type in the team password please:"
+    passwd = getpass.getpass()
+
+    # Send the message via local SMTP server.
+    s = smtplib.SMTP('smtp.gmail.com')
+    s.starttls()
+    s.login(user,passwd)
+
+    # sendmail function takes 3 arguments: sender's address, recipient's address
+    # and message to send - here it is sent as one string.
+    s.sendmail(me, you, msg.as_string())
+    s.quit()
+
 def buildEmail(sponsor):
-    print "Building email for Sponsor: ", sponsor.name
+    print "Building email for Sponsor: ", sponsor.name, " ", sponsor.email
     fileName = (sponsor.name + ".txt").replace(" ", "_")
     fileName = fileName.replace("/", "") #strip bad stuff for files
     fileName = "./emails/" + fileName
@@ -35,10 +77,12 @@ def buildEmail(sponsor):
 
     #print template
 
+    return template
+
 
 def main():
     Sponsors = []
-    with open('data/sponsors.csv', 'rb') as csvfile:
+    with open('data/sponsors_test.csv', 'rb') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in reader:
             #print ', '.join(row)
@@ -69,7 +113,8 @@ def main():
 
             #if we have all of the correct fields... build the emails!
             if sponsor.name is not None and sponsor.contactName is not None and sponsor.email is not None:
-                buildEmail(sponsor)
+                template = buildEmail(sponsor)
+                sendEmail(sponsor, template)
             else:
                 print "Cannot build email for sponsor because missing fields"
 
