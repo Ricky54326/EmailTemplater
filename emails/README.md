@@ -1,0 +1,1 @@
+This is where your outputted, templated emails will go. 
