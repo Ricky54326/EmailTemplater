@@ -1,10 +1,13 @@
 #! /usr/bin/python
 __author__ = 'riccardo mutschlechner'
 
-import smtplib, getpass
+import smtplib
+import csv
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import csv
+from keys import getkey, getlogin
+
+
 
 class Sponsor:
     def __init__(self, name, contactName, email, tier):
@@ -41,9 +44,9 @@ def sendEmail(sponsor, content):
     # the HTML message, is best and preferred.
     msg.attach(part1)
 
-    user = "team@madhacks.org"
-    print "Type in the team password please:"
-    passwd = getpass.getpass()
+    user = getlogin() # this function needs to be replaced locally (or defined) with the email login.
+    passwd = getkey() # this function needs to be replaced locally (or defined) with the email password.
+    print "Sending..."
 
     # Send the message via local SMTP server.
     s = smtplib.SMTP('smtp.gmail.com')
@@ -55,8 +58,10 @@ def sendEmail(sponsor, content):
     s.sendmail(me, you, msg.as_string())
     s.quit()
 
+    print "Sent!"
+
 def buildEmail(sponsor):
-    print "Building email for Sponsor: ", sponsor.name, " ", sponsor.email
+    print "Building email for Sponsor: ", sponsor.name, " ", sponsor.contactName, " ", sponsor.email
     fileName = (sponsor.name + ".txt").replace(" ", "_")
     fileName = fileName.replace("/", "") #strip bad stuff for files
     fileName = "./emails/" + fileName
@@ -80,13 +85,23 @@ def buildEmail(sponsor):
     return template
 
 
+def confirmSend(sponsor, template):
+    print "ARE YOU SURE YOU WOULD LIKE THE BOT TO SEND THE EMAIL TO: " + sponsor.name + " " + sponsor.contactName
+    print "y/n"
+    confirm = raw_input();
+    if 'y' in confirm:
+        return True
+    else:
+        return False
+
+
 def main():
     Sponsors = []
     with open('data/sponsors_test.csv', 'rb') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in reader:
-            #print ', '.join(row)
-            if len(row) < 3: #please replace this with a better check for a null/bad row
+            # print ', '.join(row)
+            if len(row) < 3: # please replace this with a better check for a null/bad row
                 continue
 
             # when we add a tier field, if we do, please change [[TIER]] to the appropriate field
@@ -99,7 +114,7 @@ def main():
                 contactName = None
 
             email = row[3]
-            if len(email) < 3:
+            if len(email) < 3: # add check for valid email
                 email = None
 
             tier = ""
@@ -109,12 +124,16 @@ def main():
             Sponsors.append(Sponsor(name, contactName, email, tier))
 
         for sponsor in Sponsors:
-            #sponsor.printSponsor()
+            # sponsor.printSponsor()
 
-            #if we have all of the correct fields... build the emails!
+            # if we have all of the correct fields... build the emails!
             if sponsor.name is not None and sponsor.contactName is not None and sponsor.email is not None:
                 template = buildEmail(sponsor)
-                sendEmail(sponsor, template)
+                # if a user actually confirms to send the email, then send it. Otherwise don't.
+                if confirmSend(sponsor, template):
+                    sendEmail(sponsor, template)
+                else:
+                    print "Chose not to send email to " + sponsor.name
             else:
                 print "Cannot build email for sponsor because missing fields"
 

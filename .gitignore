@@ -1,5 +1,9 @@
 # Created by https://www.gitignore.io
 
+#keys#
+keys.py
+keys.pyc
+
 #data#
 emails/*.txt
 data/*.csv
