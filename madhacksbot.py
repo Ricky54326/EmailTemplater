@@ -1,11 +1,12 @@
 #! /usr/bin/python
 __author__ = 'riccardo mutschlechner'
 
-import smtplib
-import csv
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from keys import getkey, getlogin
+import smtplib # SMTP email
+import csv # CSV parsing
+import re # regex
+from email.mime.multipart import MIMEMultipart # moar SMTP email
+from email.mime.text import MIMEText # even moar SMTP email
+from keys import getkey, getlogin # login/pass for email acct, needs to be created locally
 
 
 
@@ -60,27 +61,26 @@ def sendEmail(sponsor, content):
 
     print "Sent!"
 
-def buildEmail(sponsor):
+
+def buildemail(sponsor):
     print "Building email for Sponsor: ", sponsor.name, " ", sponsor.contactName, " ", sponsor.email
-    fileName = (sponsor.name + ".txt").replace(" ", "_")
-    fileName = fileName.replace("/", "") #strip bad stuff for files
-    fileName = "./emails/" + fileName
+    filename = (sponsor.name + ".txt").replace(" ", "_")
+    filename = filename.replace("/", "") # strip bad stuff for files
+    filename = "./emails/" + filename
 
     template = ""
 
     with open("template.txt") as t:
         template = ''.join(t.readlines())
 
-    #add sponsor contact name with first name of recruiter
+    # add sponsor contact name with first name of recruiter
     template = template.replace("[RECRUITER NAME]", sponsor.contactName.split(" ")[0])
 
-    #add company name
+    # add company name
     template = template.replace("[COMPANY NAME]", sponsor.name)
 
-    with open(fileName, "w") as f:
+    with open(filename, "w") as f:
         f.write(template)
-
-    #print template
 
     return template
 
@@ -114,8 +114,10 @@ def main():
                 contactName = None
 
             email = row[3]
-            if len(email) < 3: # add check for valid email
+            # make sure email is valid, and also a valid length
+            if len(email) < 3 or not re.match("[^@]+@[^@]+\.[^@]+", email):
                 email = None
+
 
             tier = ""
             if len(tier) < 3:
@@ -128,7 +130,7 @@ def main():
 
             # if we have all of the correct fields... build the emails!
             if sponsor.name is not None and sponsor.contactName is not None and sponsor.email is not None:
-                template = buildEmail(sponsor)
+                template = buildemail(sponsor)
                 # if a user actually confirms to send the email, then send it. Otherwise don't.
                 if confirmSend(sponsor, template):
                     sendEmail(sponsor, template)
