@@ -137,7 +137,7 @@ def main():
                 else:
                     print "Chose not to send email to " + sponsor.name
             else:
-                print "Cannot build email for sponsor because missing fields"
+                print "Cannot build email for sponsor because of missing or invalid fields"
 
 
 if __name__ == "__main__":
