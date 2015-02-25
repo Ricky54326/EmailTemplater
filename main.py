@@ -46,8 +46,7 @@ def sendEmail(sponsor, content):
     passwd = getpass.getpass()
 
     # Send the message via local SMTP server.
-    s = smtplib.SMTP('smtp.gmail.com')
-    s.starttls()
+    s = smtplib.SMTP_SSL('smtp.gmail.com')
     s.login(user,passwd)
 
     # sendmail function takes 3 arguments: sender's address, recipient's address
