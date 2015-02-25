@@ -6,7 +6,7 @@ python main.py
 Invariants:
 -Must have python 2.7 (might work with 3? no idea)
 
--Must have "sponsors.csv" file in the data/ folder
+-Must have "sponsors.csv" file in the data/ folder. Our script currently checks column 0, 1 and 3 for the fields Company Name, Contact Person Name, and Contact Email respectively. I really want to make this more robust eventually, but it isn't right now. 
 
 -Must have "template.txt" in the root directory
 
