@@ -18,11 +18,11 @@ class Sponsor:
         self.tier = tier
 
     def printSponsor(self):
-        print self.name, " ", self.contactName, " ", self.email, " ", self.tier
+        print(self.name, " ", self.contactName, " ", self.email, " ", self.tier)
 
 
 def sendEmail(sponsor, content):
-    print "Sending email to: ", sponsor.name
+    print("Sending email to: ", sponsor.name)
     # me == my email address
     # you == recipient's email address
     me = "team@madhacks.org"
@@ -47,7 +47,7 @@ def sendEmail(sponsor, content):
 
     user = getlogin() # this function needs to be replaced locally (or defined) with the email login.
     passwd = getkey() # this function needs to be replaced locally (or defined) with the email password.
-    print "Sending..."
+    print("Sending...")
 
     # Send the message via local SMTP server.
     s = smtplib.SMTP_SSL('smtp.gmail.com')
@@ -58,11 +58,12 @@ def sendEmail(sponsor, content):
     s.sendmail(me, you, msg.as_string())
     s.quit()
 
-    print "Sent!"
+    print("Sent!")
 
 
 def buildemail(sponsor):
-    print "Building email for Sponsor: ", sponsor.name, " ", sponsor.contactName, " ", sponsor.email
+    print("Building email for Sponsor: ", sponsor.name, " ",
+          sponsor.contactName, " ", sponsor.email)
     filename = (sponsor.name + ".txt").replace(" ", "_")
     filename = filename.replace("/", "") # strip bad stuff for files
     filename = "./emails/" + filename
@@ -85,9 +86,9 @@ def buildemail(sponsor):
 
 
 def confirmSend(sponsor, template):
-    print "ARE YOU SURE YOU WOULD LIKE THE BOT TO SEND THE EMAIL TO: " + sponsor.name + " " + sponsor.contactName
-    print "y/n"
-    confirm = raw_input();
+    print("ARE YOU SURE YOU WOULD LIKE THE BOT TO SEND THE EMAIL TO: " +
+          sponsor.name + " " + sponsor.contactName)
+    confirm = raw_input('[y/n]: ')
     if 'y' in confirm:
         return True
     else:
@@ -96,10 +97,10 @@ def confirmSend(sponsor, template):
 
 def main():
     Sponsors = []
-    with open('data/sponsors_test.csv', 'rb') as csvfile:
+    with open('data/sponsors_test.csv', 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in reader:
-            # print ', '.join(row)
+            # print(', '.join(row))
             if len(row) < 3: # please replace this with a better check for a null/bad row
                 continue
 
@@ -134,9 +135,9 @@ def main():
                 if confirmSend(sponsor, template):
                     sendEmail(sponsor, template)
                 else:
-                    print "Chose not to send email to " + sponsor.name
+                    print("Chose not to send email to " + sponsor.name)
             else:
-                print "Cannot build email for sponsor because of missing or invalid fields"
+                print("Cannot build email for sponsor because of missing or invalid fields")
 
 
 if __name__ == "__main__":
