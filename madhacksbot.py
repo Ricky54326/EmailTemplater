@@ -29,8 +29,8 @@ class Sponsor:
         return self.contactName.split(' ', 1)[0]
 
     def __str__(self):
-        return ('%s: %s, %s, %s' % self.name, self.contactName. self.email,
-                self.tier)
+        return ('%s: %s, %s, %s' % (self.name, self.contactName. self.email,
+                self.tier))
 
 
     @classmethod
@@ -82,8 +82,8 @@ def sendEmail(sponsor, content):
 
 
 def buildemail(sponsor):
-    print("Building email for Sponsor: ", sponsor.name, " ",
-          sponsor.contactName, " ", sponsor.email)
+    print('Building email for Sponsor: "%s", "%s", "%s"' %
+          (sponsor.name, sponsor.contactName, sponsor.email))
     filename = (sponsor.name + ".txt").replace(" ", "_")
     filename = filename.replace("/", "") # strip bad stuff for files
     filename = "./emails/" + filename
