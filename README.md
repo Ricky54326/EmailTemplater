@@ -1,7 +1,7 @@
 # Script written for MadHacks 2015 sponsor email generation.
 
 ######Usage:
-`python main.py`
+`python madhacksbot.py`
 
 
 Invariants:
