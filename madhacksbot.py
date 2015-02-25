@@ -17,82 +17,83 @@ class Sponsor:
         self.email = email
         self.tier = tier
 
-    def printSponsor(self):
+    def printsponsor(self):
         print self.name, " ", self.contactName, " ", self.email, " ", self.tier
 
 
-def sendEmail(sponsor, content):
-    print "Sending email to: ", sponsor.name
-    # me == my email address
-    # you == recipient's email address
-    me = "team@madhacks.org"
-    you = sponsor.email
+    def sendemail(self, content):
+        print "Sending email to: ", self.name
+        # me == my email address
+        # you == recipient's email address
+        me = "team@madhacks.org"
+        you = self.email
 
-    # Create message container - the correct MIME type is multipart/alternative.
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = "University of Wisconsin - MadHacks Offer of Sponsorship"
-    msg['From'] = me
-    msg['To'] = you
+        # Create message container - the correct MIME type is multipart/alternative.
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "University of Wisconsin - MadHacks Offer of Sponsorship"
+        msg['From'] = me
+        msg['To'] = you
 
-    # Create the body of the message
-    text = content
+        # Create the body of the message
+        text = content
 
-    # Record the MIME types of both parts - text/plain and text/html.
-    part1 = MIMEText(text, 'plain')
+        # Record the MIME types of both parts - text/plain and text/html.
+        part1 = MIMEText(text, 'plain')
 
-    # Attach parts into message container.
-    # According to RFC 2046, the last part of a multipart message, in this case
-    # the HTML message, is best and preferred.
-    msg.attach(part1)
+        # Attach parts into message container.
+        # According to RFC 2046, the last part of a multipart message, in this case
+        # the HTML message, is best and preferred.
+        msg.attach(part1)
 
-    user = getlogin() # this function needs to be replaced locally (or defined) with the email login.
-    passwd = getkey() # this function needs to be replaced locally (or defined) with the email password.
-    print "Sending..."
+        user = getlogin() # this function needs to be replaced locally (or defined) with the email login.
+        passwd = getkey() # this function needs to be replaced locally (or defined) with the email password.
+        print "Sending..."
 
-    # Send the message via local SMTP server.
-    s = smtplib.SMTP('smtp.gmail.com')
-    s.starttls()
-    s.login(user,passwd)
+        # Send the message via local SMTP server.
+        s = smtplib.SMTP('smtp.gmail.com')
+        s.starttls()
+        s.login(user,passwd)
 
-    # sendmail function takes 3 arguments: sender's address, recipient's address
-    # and message to send - here it is sent as one string.
-    s.sendmail(me, you, msg.as_string())
-    s.quit()
+        # sendmail function takes 3 arguments: sender's address, recipient's address
+        # and message to send - here it is sent as one string.
+        s.sendmail(me, you, msg.as_string())
+        s.quit()
 
-    print "Sent!"
-
-
-def buildemail(sponsor):
-    print "Building email for Sponsor: ", sponsor.name, " ", sponsor.contactName, " ", sponsor.email
-    filename = (sponsor.name + ".txt").replace(" ", "_")
-    filename = filename.replace("/", "") # strip bad stuff for files
-    filename = "./emails/" + filename
-
-    template = ""
-
-    with open("template.txt") as t:
-        template = ''.join(t.readlines())
-
-    # add sponsor contact name with first name of recruiter
-    template = template.replace("[RECRUITER NAME]", sponsor.contactName.split(" ")[0])
-
-    # add company name
-    template = template.replace("[COMPANY NAME]", sponsor.name)
-
-    with open(filename, "w") as f:
-        f.write(template)
-
-    return template
+        print "Sent!"
 
 
-def confirmSend(sponsor, template):
-    print "ARE YOU SURE YOU WOULD LIKE THE BOT TO SEND THE EMAIL TO: " + sponsor.name + " " + sponsor.contactName
-    print "y/n"
-    confirm = raw_input();
-    if 'y' in confirm:
-        return True
-    else:
-        return False
+    def buildemail(self):
+        print "Building email for Sponsor: ", self.name, " ", self.contactName, " ", self.email
+        filename = (self.name + ".txt").replace(" ", "_")
+        filename = filename.replace("/", "") # strip bad stuff for files
+        filename = "./emails/" + filename
+
+        template = ""
+
+        with open("template.txt") as t:
+            template = ''.join(t.readlines())
+
+        # add sponsor contact name with first name of recruiter
+        template = template.replace("[RECRUITER NAME]", self.contactName.split(" ")[0])
+
+        # add company name
+        template = template.replace("[COMPANY NAME]", self.name)
+
+        with open(filename, "w") as f:
+            f.write(template)
+
+        return template
+
+
+    def confirmsend(self, template):
+        print "ARE YOU SURE YOU WOULD LIKE THE BOT TO SEND THE EMAIL TO: " + self.name + \
+              " " + self.contactName
+        print "y/n"
+        confirm = raw_input();
+        if 'y' in confirm:
+            return True
+        else:
+            return False
 
 
 def main():
@@ -130,10 +131,10 @@ def main():
 
             # if we have all of the correct fields... build the emails!
             if sponsor.name is not None and sponsor.contactName is not None and sponsor.email is not None:
-                template = buildemail(sponsor)
+                template = sponsor.buildemail()
                 # if a user actually confirms to send the email, then send it. Otherwise don't.
-                if confirmSend(sponsor, template):
-                    sendEmail(sponsor, template)
+                if sponsor.confirmsend(template):
+                    sponsor.sendemail(template)
                 else:
                     print "Chose not to send email to " + sponsor.name
             else:
