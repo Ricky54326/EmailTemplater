@@ -18,7 +18,7 @@ COL_LAST_CONTACTED = 7
 
 class Sponsor():
     # Some of these are valid in emails, but we should be careful
-    bad_characters = (';', '/', '\\', '"', "'", '(', ')')
+    bad_characters = (';', '/', '\\', '"', "'", '(', ')', ',')
 
     def __init__(self, name, contactName, email, tier=None):
         self.name = self.__validate(name)
