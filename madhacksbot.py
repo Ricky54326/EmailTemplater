@@ -44,7 +44,7 @@ class Sponsor():
         you = self.email
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "Madhacks + %s" % self.name
+        msg['Subject'] = "MadHacks + %s" % self.name
         msg['From'] = me
         msg['To'] = you
 
@@ -143,15 +143,21 @@ class Main():
             # Load other columns
             name = row[COL_COMPANY_NAME]
             if len(name) < 3:
-                name = None
+                print('Skipping due to invalid company name')
+                writer.writerow(row)
+                continue
 
             contactName = row[COL_CONTACT_NAME]
             if len(contactName) < 3:
-                contactName = None
+                print('Skipping due to invalid contact name')
+                writer.writerow(row)
+                continue
 
             email = row[COL_CONTACT_EMAIL]
             if len(email) < 5 or not re.match("[^@()]+@[\w\-]+\.[\w]+", email):
-                email = None
+                print('Skipping due to invalid email')
+                writer.writerow(row)
+                continue
 
             try:
                 sponsor = Sponsor(name, contactName, email)
