@@ -16,6 +16,7 @@ COL_CONTACT_EMAIL = 3
 COL_STATUS = 5
 COL_LAST_CONTACTED = 7
 
+
 class Sponsor():
     # Some of these are valid in emails, but we should be careful
     bad_characters = (';', '/', '\\', '"', "'", '(', ')', ',')
