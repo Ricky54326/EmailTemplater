@@ -2,7 +2,9 @@
 
 ######Usage:
 `python madhacksbot.py <filename>`
+
 or, to validate/find errors in your dataset:
+
 `python madhacksbot.py --validate <filename>`
 
 
