@@ -193,11 +193,20 @@ class Main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('--merge', action='store_true')
     parser.add_argument('--validate', action='store_true')
     parser.add_argument('file', type=argparse.FileType('r'))
+    parser.add_argument('--mergefile', type=argparse.FileType('r'),
+                        help='Used only as the second merge source')
+    parser.add_argument('--mergeout', type=argparse.FileType('w'),
+                        help='Used as the merge output CSV file')
     args = parser.parse_args()
 
-    if args.validate:  # User passed the --validate option
+    if args.merge:
+        import libs.merge
+        merger = libs.merge.Merger(args)
+        merger.save_file()
+    elif args.validate:  # User passed the --validate option
         import libs.validate
         libs.validate.validate(args)
     else:
