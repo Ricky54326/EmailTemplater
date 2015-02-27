@@ -1,7 +1,9 @@
 # Script written for MadHacks 2015 sponsor email generation.
 
 ######Usage:
-`python madhacksbot.py`
+`python madhacksbot.py <filename>`
+or, to validate/find errors in your dataset:
+`python madhacksbot.py --validate <filename>`
 
 
 Invariants:
