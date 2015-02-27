@@ -19,7 +19,7 @@ COL_LAST_CONTACTED = 7
 
 class Sponsor():
     # Some of these are valid in emails, but we should be careful
-    bad_characters = (';', '/', '\\', '"', "'", '(', ')', ',')
+    bad_characters = (';', '/', '\\', '"', '(', ')', ',')
 
     def __init__(self, name, contactName, email, tier=None):
         self.name = self.__validate(name)
@@ -40,11 +40,11 @@ class Sponsor():
         print("Sending email to: ", self.name)
         # me == my email address
         # you == recipient's email address
-        me = "team@madhacks.org"
+        me = "MadHacks Team <team@madhacks.org>"
         you = self.email
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "University of Wisconsin - MadHacks Offer of Sponsorship"
+        msg['Subject'] = "Madhacks + %s" % self.name
         msg['From'] = me
         msg['To'] = you
 
@@ -153,7 +153,10 @@ class Main():
             if len(email) < 5 or not re.match("[^@()]+@[\w\-]+\.[\w]+", email):
                 email = None
 
-            sponsor = Sponsor(name, contactName, email)
+            try:
+                sponsor = Sponsor(name, contactName, email)
+            except ValueError:
+                print('Skipping %s/%s due to validation error' % (name, email))
 
             # Final check, and then ask to send
             if sponsor.name and sponsor.contactName and sponsor.email:
