@@ -1,7 +1,11 @@
 # Script written for MadHacks 2015 sponsor email generation.
 
 ######Usage:
-`python madhacksbot.py`
+`python madhacksbot.py <filename>`
+
+or, to validate/find errors in your dataset:
+
+`python madhacksbot.py --validate <filename>`
 
 
 Invariants:
@@ -19,3 +23,5 @@ Please see the Issues for all currently in progress features as well as bugs. Th
 
 
 Let me know if there are any issues, or fork+fix. Thanks!
+
+You are bound to the MIT license (in license.txt) upon downloading or using this script. 
