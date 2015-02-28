@@ -24,7 +24,7 @@ class Sponsor():
     def __init__(self, name, contactName, email, tier=None):
         self.name = self.__validate(name)
         self.contactName = self.__validate(contactName)
-        self.email = self.__validate(email)
+        self.email = self.__validate(email, extrachars=[' '])
 
         if tier:  # TODO: when tier is used, remove the if statement
             self.tier = self.__validate(tier)
@@ -75,11 +75,15 @@ class Sponsor():
         print("Sent!")
 
     @classmethod
-    def __validate(cls, text):
+    def __validate(cls, text, extrachars=[]):
+        text = text.strip()
         for char in cls.bad_characters:
             if char in text:
                 raise ValueError("Bad character '%s' found in text." % char)
-        return text.strip()
+        for char in extrachars:
+            if char in text:
+                raise ValueError("Bad character '%s' found in text." % char)
+        return text
 
     def buildemail(self):
         print('Building email for Sponsor: "%s", "%s", "%s"' %
@@ -119,6 +123,8 @@ class Sponsor():
 
 
 class Main():
+    email_regex = re.compile("[^@: ]+@[\w\-]+\.[\w]+")
+
     def send_emails(self, args):
         sponsors = []
         reader = csv.reader(args.file, delimiter=',')
@@ -154,7 +160,7 @@ class Main():
                 continue
 
             email = row[COL_CONTACT_EMAIL]
-            if len(email) < 5 or not re.match("[^@()]+@[\w\-]+\.[\w]+", email):
+            if len(email) < 5 or not re.match("[^@: ]+@[\w\-]+\.[\w]+", email):
                 print('Skipping due to invalid email')
                 writer.writerow(row)
                 continue

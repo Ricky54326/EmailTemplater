@@ -61,3 +61,11 @@ class TestSponsor(unittest.TestCase):
                                     DEFAULT_TIER)
             self.assertEqual(s.get_first_name(), self.first_names[fullname],
                              'Returned first name does not match test.')
+
+    def test_validate_extrachars(self):
+        '''
+        Emails have an extra list of invalid characters, such as spaces.
+        Check that an error is thrown for these.
+        '''
+        self.assertRaises(ValueError, madhacksbot.Sponsor, DEFAULT_COMPANY,
+                          DEFAULT_CONTACT, 'email @example.com', DEFAULT_TIER)
