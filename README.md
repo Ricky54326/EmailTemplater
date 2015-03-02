@@ -1,17 +1,23 @@
 # Script written for MadHacks 2015 sponsor email generation.
 
 ######Usage:
+Send emails:
+
 `python madhacksbot.py <filename>`
 
-or, to validate/find errors in your dataset:
+Validate/find errors in your dataset:
 
 `python madhacksbot.py --validate <filename>`
+
+Merge your CSV files:
+
+`python madhacksbot.py --merge --mergefile <updated_file.csv> --mergeout <output_file.csv> <source_file.csv>`
 
 
 Invariants:
 * Must have Python 2.7 or 3.x
 
-* Must have "sponsors.csv" file in the data/ folder. Our script currently checks column 0, 1 and 3 for the fields Company Name, Contact Person Name, and Contact Email respectively. I really want to make this more robust eventually, but it isn't right now. 
+* Must be run on a CSV file. Our script currently checks column 0, 1 and 3 for the fields Company Name, Contact Person Name, and Contact Email respectively. I really want to make this more robust eventually, but it isn't right now. 
 
 * Must have "template.txt" in the root directory. This is simply the email that you want to send to your sponsors. The script will replace "[RECRUITER NAME]" with the contact name, and [COMPANY NAME] with the company's name. Also, it'll send the email to the email address stored as well.
 
