@@ -10,11 +10,7 @@ from email.mime.text import MIMEText  # even moar SMTP email
 from keys import getkey, getlogin  # login/pass for email acct, needs to be created locally
 import time
 
-COL_COMPANY_NAME = 0
-COL_CONTACT_NAME = 1
-COL_CONTACT_EMAIL = 3
-COL_STATUS = 5
-COL_LAST_CONTACTED = 7
+from libs.constants import *
 
 
 class Sponsor():
@@ -212,6 +208,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--merge', action='store_true')
     parser.add_argument('--validate', action='store_true')
+    parser.add_argument('--stats', action='store_true')
     parser.add_argument('file', type=argparse.FileType('r'))
     parser.add_argument('--mergefile', type=argparse.FileType('r'),
                         help='Used only as the second merge source')
@@ -219,13 +216,16 @@ if __name__ == "__main__":
                         help='Used as the merge output CSV file')
     args = parser.parse_args()
 
-    if args.merge:
+    if args.merge:  # User passed the --merge option
         import libs.merge
         merger = libs.merge.Merger(args)
         merger.save_file()
     elif args.validate:  # User passed the --validate option
         import libs.validate
         libs.validate.validate(args)
-    else:
+    elif args.stats:  # User passed the --stats option
+        import libs.stats
+        libs.stats.compute_data_entry_stats(args)
+    else:  # No mode option passed; use the default mail-sending mode
         main = Main()
         main.send_emails(args)

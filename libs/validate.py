@@ -1,11 +1,7 @@
 import csv
 from madhacksbot import Sponsor
 
-COL_COMPANY_NAME = 0
-COL_CONTACT_NAME = 1
-COL_CONTACT_EMAIL = 3
-COL_STATUS = 5  # TODO: check row status before sending
-COL_LAST_CONTACTED = 7
+from libs.constants import *
 
 
 def validate(args):
