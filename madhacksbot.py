@@ -125,10 +125,17 @@ class Sponsor():
 class Main():
     email_regex = re.compile("[^@: ]+@[\w\-]+\.[\w]+")
 
-    def send_emails(self, args):
-        sponsors = []
-        reader = csv.reader(args.file, delimiter=',')
+    def __init__(self):
+        self.stat_sent = 0
+        self.stat_manual_skip = 0
 
+    def display_stats(self):
+        print('')
+        print('Sent %i e-mails' % self.stat_sent)
+        print('Manually skipped %i e-mails' % self.stat_manual_skip)
+
+    def send_emails(self, args):
+        reader = csv.reader(args.file, delimiter=',')
         outfile = open('data/sponsors-run-%i.csv' % time.time(), 'w')
         writer = csv.writer(outfile)
 
@@ -186,13 +193,17 @@ class Main():
 
         outfile.close()
 
+        self.display_stats()
+
     def send_email(self, sponsor):
         template = sponsor.buildemail()
 
         if sponsor.confirm_send(template):
             sponsor.sendemail(template)
+            self.stat_sent += 1
             return True
         else:
+            self.stat_manual_skip += 1
             print('Chose not to send email to %s/%s' %
                   (sponsor.name, sponsor.get_first_name()))
 
