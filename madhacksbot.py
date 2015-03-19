@@ -151,7 +151,7 @@ class Main():
 
             # Load other columns
             name = row[COL_COMPANY_NAME]
-            if len(name) < 3:
+            if len(name) < 2:
                 print('Skipping due to invalid company name')
                 writer.writerow(row)
                 continue
